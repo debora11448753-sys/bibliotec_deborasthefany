@@ -3,10 +3,14 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BiblioTec - Categorias</title>
 </head>
 <body>
+
 <h1>Lista de Categorias</h1>
+
+<a th:href="@{/categorias/nova}">Cadastrar nova categoria</a>
 
 <h2>Categorias cadastradas</h2>
 
@@ -16,13 +20,33 @@
         <th>ID</th>
         <th>Nome</th>
         <th>Descrição</th>
+        <th>Ações</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="categoria : ${categorias}">
         <td th:text="${categoria.id}"></td>
         <td th:text="${categoria.nome}"></td>
         <td th:text="${categoria.descricao}"></td>
+
+        <td>
+            <a th:href="@{/categorias/{id}/editar(id=${categoria.id})}">
+                Editar
+            </a>
+
+            <form th:action="@{/categorias/{id}/excluir(id=${categoria.id})}"
+                  method="post"
+                  style="display:inline;"
+                  onsubmit="return confirm('Deseja realmente excluir esta categoria?');">
+
+                <button type="submit">Excluir</button>
+            </form>
+        </td>
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(categorias)}">
+        <td colspan="4">Nenhuma categoria cadastrada.</td>
     </tr>
     </tbody>
 </table>

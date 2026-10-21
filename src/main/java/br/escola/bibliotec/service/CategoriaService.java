@@ -10,17 +10,27 @@ import java.util.List;
 @Service
 public class CategoriaService {
 
-    private final CategoriaRepository repository;
+    private final CategoriaRepository categoriaRepository;
 
-    public CategoriaService(CategoriaRepository repository) {
-        this.repository = repository;
+    public CategoriaService(CategoriaRepository categoriaRepository) {
+        this.categoriaRepository = categoriaRepository;
     }
 
     public List<Categoria> listarTodas() {
-        return repository.findAll();
+        return categoriaRepository.findAll();
     }
 
     public Categoria salvar(Categoria categoria) {
-        return repository.save(categoria);
+        return categoriaRepository.save(categoria);
+    }
+
+    public Categoria buscarPorId(Long id) {
+        return categoriaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Categoria não encontrada"));
+    }
+
+    public void excluir(Long id) {
+        categoriaRepository.deleteById(id);
     }
 }

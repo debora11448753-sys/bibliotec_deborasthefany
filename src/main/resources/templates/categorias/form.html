@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categoria - BiblioTec</title>
+</head>
+<body>
+
+<h1 th:text="${categoria.id == null ? 'Nova Categoria' : 'Editar Categoria'}">
+  Categoria
+</h1>
+
+<form th:action="@{/categorias}" th:object="${categoria}" method="post">
+
+  <input type="hidden" th:field="*{id}">
+
+  <div>
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" th:field="*{nome}" required>
+  </div>
+
+  <div>
+    <label for="descricao">Descrição:</label>
+    <textarea id="descricao" th:field="*{descricao}"></textarea>
+  </div>
+
+  <button type="submit">Salvar</button>
+
+  <a th:href="@{/categorias}">Cancelar e voltar</a>
+
+</form>
+
+</body>
+</html>
