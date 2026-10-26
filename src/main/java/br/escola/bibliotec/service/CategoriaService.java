@@ -20,7 +20,25 @@ public class CategoriaService {
         return categoriaRepository.findAll();
     }
 
+    public boolean nomeJaExiste(Categoria categoria) {
+        String nome = categoria.getNome();
+
+        if (nome == null || nome.isBlank()) {
+            return false;
+        }
+
+        return categoriaRepository.findByNomeIgnoreCase(nome.trim())
+                .filter(existente ->
+                        categoria.getId() == null
+                                || !existente.getId().equals(categoria.getId()))
+                .isPresent();
+    }
+
     public Categoria salvar(Categoria categoria) {
+        if (categoria.getNome() != null) {
+            categoria.setNome(categoria.getNome().trim());
+        }
+
         return categoriaRepository.save(categoria);
     }
 

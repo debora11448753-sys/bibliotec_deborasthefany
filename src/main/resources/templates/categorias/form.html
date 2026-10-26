@@ -5,6 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Categoria - BiblioTec</title>
+
+  <style>
+    .erro {
+      margin: 5px 0 10px;
+      color: #b3402a;
+      font-size: 0.9rem;
+    }
+
+    input.campo-erro,
+    textarea.campo-erro {
+      border: 1px solid #b3402a;
+      background-color: #fdf1ef;
+    }
+  </style>
 </head>
 <body>
 
@@ -18,12 +32,31 @@
 
   <div>
     <label for="nome">Nome:</label>
-    <input type="text" id="nome" th:field="*{nome}" required>
+    <input
+            type="text"
+            id="nome"
+            th:field="*{nome}"
+            th:errorclass="campo-erro">
+
+    <p class="erro"
+       th:if="${#fields.hasErrors('nome')}"
+       th:errors="*{nome}">
+      Erro no nome
+    </p>
   </div>
 
   <div>
     <label for="descricao">Descrição:</label>
-    <textarea id="descricao" th:field="*{descricao}"></textarea>
+    <textarea
+            id="descricao"
+            th:field="*{descricao}"
+            th:errorclass="campo-erro"></textarea>
+
+    <p class="erro"
+       th:if="${#fields.hasErrors('descricao')}"
+       th:errors="*{descricao}">
+      Erro na descrição
+    </p>
   </div>
 
   <button type="submit">Salvar</button>
