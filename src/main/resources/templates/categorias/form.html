@@ -1,69 +1,440 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categoria - BiblioTec</title>
+
+  <title>Categoria | BiblioTec</title>
 
   <style>
-    .erro {
-      margin: 5px 0 10px;
-      color: #b3402a;
-      font-size: 0.9rem;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    input.campo-erro,
-    textarea.campo-erro {
-      border: 1px solid #b3402a;
-      background-color: #fdf1ef;
+    body {
+        font-family: 'Trebuchet MS', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: #e9faff;
+        background: linear-gradient(
+            180deg,
+            #071b49,
+            #123e78,
+            #246b91,
+            #62b9c9
+        );
+        padding: 35px 20px;
+        position: relative;
+    }
+
+    /* Bolhas do oceano */
+
+    .bolhas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+    }
+
+    .bolhas span {
+        position: absolute;
+        bottom: -80px;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #b8f5ff88;
+        border-radius: 50%;
+        background: #ffffff18;
+        animation: subir 12s linear infinite;
+    }
+
+    .bolhas span:nth-child(1) {
+        left: 5%;
+        animation-delay: 0s;
+    }
+
+    .bolhas span:nth-child(2) {
+        left: 18%;
+        animation-delay: 3s;
+        width: 30px;
+        height: 30px;
+    }
+
+    .bolhas span:nth-child(3) {
+        left: 35%;
+        animation-delay: 6s;
+    }
+
+    .bolhas span:nth-child(4) {
+        left: 55%;
+        animation-delay: 2s;
+        width: 35px;
+        height: 35px;
+    }
+
+    .bolhas span:nth-child(5) {
+        left: 72%;
+        animation-delay: 5s;
+    }
+
+    .bolhas span:nth-child(6) {
+        left: 90%;
+        animation-delay: 1s;
+        width: 28px;
+        height: 28px;
+    }
+
+    @keyframes subir {
+        0% {
+            transform: translateY(0);
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-120vh);
+            opacity: 0;
+        }
+    }
+
+    /* Conteúdo */
+
+    .conteudo {
+        position: relative;
+        z-index: 1;
+        max-width: 750px;
+        margin: auto;
+    }
+
+    header {
+        text-align: center;
+        padding: 30px 20px;
+        margin-bottom: 25px;
+        background: #061b45d9;
+        border: 1px solid #9cecff70;
+        border-radius: 25px;
+        box-shadow: 0 10px 35px #00102e55;
+    }
+
+    .decoracao {
+        font-size: 34px;
+        letter-spacing: 7px;
+        margin-bottom: 12px;
+    }
+
+    h1 {
+        color: #b6f5ff;
+        font-size: clamp(27px, 5vw, 38px);
+        text-shadow: 0 0 18px #47d9ff80;
+        margin-bottom: 10px;
+    }
+
+    header p {
+        color: #e1faff;
+        font-size: 15px;
+    }
+
+    .agua-viva {
+        display: inline-block;
+        animation: flutuar 3s ease-in-out infinite;
+    }
+
+    @keyframes flutuar {
+        0%, 100% {
+            transform: translateY(0) rotate(-5deg);
+        }
+
+        50% {
+            transform: translateY(-12px) rotate(5deg);
+        }
+    }
+
+    /* Cartão do formulário */
+
+    .formulario-container {
+        padding: 30px;
+        background: #071d43e8;
+        border: 1px solid #a9edff75;
+        border-radius: 20px;
+        box-shadow: 0 12px 35px #00102e55;
+    }
+
+    .subtitulo {
+        margin-bottom: 25px;
+        color: #aef4ff;
+        font-size: 21px;
+        text-align: center;
+    }
+
+    .grupo-campo {
+        margin-bottom: 22px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 9px;
+        color: #c7f6ff;
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+        display: block;
+        width: 100%;
+        padding: 14px 15px;
+        border: 1px solid #83cce5;
+        border-radius: 10px;
+        outline: none;
+        background: #eafaff;
+        color: #123e78;
+        font-family: inherit;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    input[type="text"] {
+        min-height: 48px;
+    }
+
+    textarea {
+        min-height: 140px;
+        resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+        border-color: #61e4ff;
+        box-shadow: 0 0 0 3px #61e4ff35;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #7898ad;
+    }
+
+    .ajuda {
+        display: block;
+        margin-top: 7px;
+        color: #a9d8e8;
+        font-size: 12px;
+    }
+
+    /* Botões */
+
+    .botoes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .botao {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 12px 20px;
+        border: 1px solid #a9edff90;
+        border-radius: 10px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .botao-salvar {
+        background: #176a91;
+        color: white;
+        flex: 1;
+    }
+
+    .botao-salvar:hover {
+        background: #258eb4;
+        transform: translateY(-2px);
+    }
+
+    .botao-voltar {
+        background: transparent;
+        color: #c5f3ff;
+    }
+
+    .botao-voltar:hover {
+        background: #438bb65c;
+    }
+
+    .mensagem-erro {
+        margin-bottom: 20px;
+        padding: 13px;
+        border: 1px solid #ffb3c4;
+        border-radius: 10px;
+        background: #7f233dcc;
+        color: white;
+    }
+
+    /* Rodapé */
+
+    .rodape {
+        padding: 28px 10px 10px;
+        color: #e0faff;
+        line-height: 2;
+        text-align: center;
+    }
+
+    .rodape p {
+        color: #e0faff;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 12px;
+        }
+
+        header {
+            padding: 25px 12px;
+        }
+
+        .formulario-container {
+            padding: 20px 15px;
+        }
+
+        .botoes {
+            flex-direction: column;
+        }
+
+        .botao {
+            width: 100%;
+        }
+
+        .decoracao {
+            font-size: 25px;
+            letter-spacing: 3px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
     }
   </style>
 </head>
+
 <body>
 
-<h1 th:text="${categoria.id == null ? 'Nova Categoria' : 'Editar Categoria'}">
-  Categoria
-</h1>
+<div class="bolhas" aria-hidden="true">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
 
-<form th:action="@{/categorias}" th:object="${categoria}" method="post">
+<main class="conteudo">
 
-  <input type="hidden" th:field="*{id}">
+  <header>
+    <div class="decoracao">
+      <span class="agua-viva">🪼</span>
+      🐠 🪸 🐚
+    </div>
 
-  <div>
-    <label for="nome">Nome:</label>
-    <input
-            type="text"
-            id="nome"
-            th:field="*{nome}"
-            th:errorclass="campo-erro">
+    <h1>
+            <span th:if="${categoria.id == null}">
+                🌊 Nova Categoria
+            </span>
 
-    <p class="erro"
-       th:if="${#fields.hasErrors('nome')}"
-       th:errors="*{nome}">
-      Erro no nome
-    </p>
-  </div>
+      <span th:unless="${categoria.id == null}">
+                🐬 Editar Categoria
+            </span>
+    </h1>
 
-  <div>
-    <label for="descricao">Descrição:</label>
-    <textarea
-            id="descricao"
-            th:field="*{descricao}"
-            th:errorclass="campo-erro"></textarea>
+    <p>Ajude a organizar nosso oceano de conhecimento!</p>
+  </header>
 
-    <p class="erro"
-       th:if="${#fields.hasErrors('descricao')}"
-       th:errors="*{descricao}">
-      Erro na descrição
-    </p>
-  </div>
+  <section class="formulario-container">
 
-  <button type="submit">Salvar</button>
+    <h2 class="subtitulo">
+      🐚 Informações da categoria
+    </h2>
 
-  <a th:href="@{/categorias}">Cancelar e voltar</a>
+    <div class="mensagem-erro"
+         th:if="${erro != null}"
+         th:text="${erro}">
+      Mensagem de erro
+    </div>
 
-</form>
+    <form th:action="@{/categorias}"
+          th:object="${categoria}"
+          method="post">
+
+      <input type="hidden" th:field="*{id}">
+
+      <div class="grupo-campo">
+        <label for="nome">Nome da categoria</label>
+
+        <input type="text"
+               id="nome"
+               th:field="*{nome}"
+               placeholder="Ex.: Literatura, Suspense, Romance..."
+               maxlength="60"
+               required>
+
+        <small class="ajuda">
+          Informe um nome com até 60 caracteres.
+        </small>
+      </div>
+
+      <div class="grupo-campo">
+        <label for="descricao">Descrição</label>
+
+        <textarea id="descricao"
+                  th:field="*{descricao}"
+                  maxlength="255"
+                  placeholder="Escreva uma breve descrição da categoria..."></textarea>
+
+        <small class="ajuda">
+          A descrição pode ter até 255 caracteres.
+        </small>
+      </div>
+
+      <div class="botoes">
+
+        <button type="submit" class="botao botao-salvar">
+          💾 Salvar categoria
+        </button>
+
+        <a th:href="@{/categorias}"
+           class="botao botao-voltar">
+          ← Voltar
+        </a>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <footer class="rodape">
+    <p>🪼 🐙 🐠 🪸 🐚 🪼</p>
+    <p>Feito com carinho nas profundezas do oceano 💙</p>
+    <p>BiblioTec — Um mar de conhecimento!</p>
+  </footer>
+
+</main>
 
 </body>
 </html>

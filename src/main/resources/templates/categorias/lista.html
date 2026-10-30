@@ -1,55 +1,110 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BiblioTec - Categorias</title>
+
+    <title>Categorias | BiblioTec</title>
+
+    <link rel="stylesheet" th:href="@{/css/categorias.css}">
 </head>
+
 <body>
 
-<h1>Lista de Categorias</h1>
+<header class="cabecalho">
+    <div class="container">
+        <h1>BiblioTec</h1>
+        <p>Sistema de gerenciamento de biblioteca</p>
+    </div>
+</header>
 
-<a th:href="@{/categorias/nova}">Cadastrar nova categoria</a>
+<main class="container">
 
-<h2>Categorias cadastradas</h2>
+    <section class="titulo-pagina">
+        <div>
+            <h2>Categorias da biblioteca</h2>
+            <p>Gerencie as categorias cadastradas no sistema.</p>
+        </div>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Descrição</th>
-        <th>Ações</th>
-    </tr>
-    </thead>
+        <a class="botao botao-principal"
+           th:href="@{/categorias/nova}">
+            + Nova categoria
+        </a>
+    </section>
 
-    <tbody>
-    <tr th:each="categoria : ${categorias}">
-        <td th:text="${categoria.id}"></td>
-        <td th:text="${categoria.nome}"></td>
-        <td th:text="${categoria.descricao}"></td>
+    <p class="mensagem-sucesso"
+       th:if="${mensagem}"
+       th:text="${mensagem}">
+        Operação realizada com sucesso!
+    </p>
 
-        <td>
-            <a th:href="@{/categorias/{id}/editar(id=${categoria.id})}">
-                Editar
-            </a>
+    <section class="cartao">
 
-            <form th:action="@{/categorias/{id}/excluir(id=${categoria.id})}"
-                  method="post"
-                  style="display:inline;"
-                  onsubmit="return confirm('Deseja realmente excluir esta categoria?');">
+        <div class="tabela-responsiva">
 
-                <button type="submit">Excluir</button>
-            </form>
-        </td>
-    </tr>
+            <table>
+                <caption>Categorias cadastradas no BiblioTec</caption>
 
-    <tr th:if="${#lists.isEmpty(categorias)}">
-        <td colspan="4">Nenhuma categoria cadastrada.</td>
-    </tr>
-    </tbody>
-</table>
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="categoria : ${categorias}">
+                    <td th:text="${categoria.id}">1</td>
+
+                    <td th:text="${categoria.nome}">
+                        Nome da categoria
+                    </td>
+
+                    <td th:text="${categoria.descricao}">
+                        Descrição da categoria
+                    </td>
+
+                    <td class="acoes">
+                        <a class="botao botao-editar"
+                           th:href="@{/categorias/{id}/editar(id=${categoria.id})}">
+                            Editar
+                        </a>
+
+                        <form th:action="@{/categorias/{id}/excluir(id=${categoria.id})}"
+                              method="post"
+                              onsubmit="return confirm('Deseja realmente excluir esta categoria?');">
+
+                            <button class="botao botao-excluir"
+                                    type="submit">
+                                Excluir
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(categorias)}">
+                    <td colspan="4" class="tabela-vazia">
+                        Nenhuma categoria cadastrada.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="rodape">
+    <p>BiblioTec — Sistema de gerenciamento de biblioteca</p>
+</footer>
 
 </body>
 </html>
