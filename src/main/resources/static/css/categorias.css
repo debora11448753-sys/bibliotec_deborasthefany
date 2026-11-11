@@ -1,3 +1,4 @@
+```css
 * {
     margin: 0;
     padding: 0;
@@ -81,7 +82,8 @@ caption {
     font-weight: bold;
 }
 
-th, td {
+th,
+td {
     padding: 17px 14px;
     text-align: left;
     border-bottom: 1px solid rgba(150, 225, 240, 0.2);
@@ -148,6 +150,7 @@ tbody tr:hover {
     padding: 14px;
     border-radius: 10px;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .tabela-vazia {
@@ -175,3 +178,4 @@ tbody tr:hover {
         align-items: flex-start;
     }
 }
+```

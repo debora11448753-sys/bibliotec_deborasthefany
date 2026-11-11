@@ -5,106 +5,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Categorias | BiblioTec</title>
 
-    <link rel="stylesheet" th:href="@{/css/categorias.css}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Trebuchet MS', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #e9faff;
+            background: linear-gradient(
+                180deg,
+                #071b49,
+                #123e78,
+                #246b91,
+                #62b9c9
+            );
+            padding: 35px 20px;
+            position: relative;
+        }
+
+        /* Bolhas do oceano */
+        .bolhas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bolhas span {
+            position: absolute;
+            bottom: -80px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #b8f5ff88;
+            border-radius: 50%;
+            background: #ffffff18;
+            animation: subir 12s linear infinite;
+        }
+
+        .bolhas span:nth-child(1) { left: 5%; animation-delay: 0s; }
+        .bolhas span:nth-child(2) { left: 18%; animation-delay: 3s; width: 30px; height: 30px; }
+        .bolhas span:nth-child(3) { left: 35%; animation-delay: 6s; }
+        .bolhas span:nth-child(4) { left: 55%; animation-delay: 2s; width: 35px; height: 35px; }
+        .bolhas span:nth-child(5) { left: 72%; animation-delay: 5s; }
+        .bolhas span:nth-child(6) { left: 90%; animation-delay: 1s; width: 28px; height: 28px; }
+
+        @keyframes subir {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+
+            20% { opacity: 1; }
+
+            100% {
+                transform: translateY(-120vh);
+                opacity: 0;
+            }
+        }
+
+        .conteudo {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 35px 20px;
+            margin-bottom: 30px;
+            background: #061b45a8;
+            border: 1px solid #9cecff70;
+            border-radius: 25px;
+            box-shadow: 0 10px 35px #00102e55;
+        }
+
+        .decoracao {
+            font-size: 35px;
+            letter-spacing: 8px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #b6f5ff;
+            font-size: clamp(27px, 5vw, 43px);
+            text-shadow: 0 0 18px #47d9ff80;
+            margin-bottom: 12px;
+        }
+
+        header p {
+            color: #e1faff;
+            font-size: 16px;
+        }
+
+        .agua-viva {
+            display: inline-block;
+            animation: flutuar 3s ease-in-out infinite;
+        }
+
+        .agua-viva:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .agua-viva:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes flutuar {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        /* Botão de cadastrar */
+        .barra-acoes {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .botao:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.15);
+        }
+
+        .botao-novo {
+            background: #55dce5;
+            color: #062b49;
+            padding: 14px 22px;
+            font-size: 15px;
+            box-shadow: 0 5px 15px #00102e55;
+        }
+
+        .botao-editar {
+            background: #318eb5;
+            color: white;
+        }
+
+        .botao-excluir {
+            background: #bd5267;
+            color: white;
+        }
+
+        /* Mensagem de sucesso */
+        .mensagem-sucesso {
+            margin-bottom: 22px;
+            padding: 15px 20px;
+            background: rgba(28, 160, 125, 0.25);
+            border: 1px solid #79f5ce;
+            border-left: 5px solid #65f0c5;
+            border-radius: 12px;
+            color: #d6fff1;
+            font-weight: bold;
+            animation: aparecer 0.4s ease;
+        }
+
+        .mensagem-sucesso::before {
+            content: "✓ ";
+            font-size: 18px;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tabela-container {
+            background: #071d43d9;
+            border: 1px solid #a9edff75;
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 12px 35px #00102e55;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #effcff;
+        }
+
+        caption {
+            padding: 10px;
+            margin-bottom: 15px;
+            color: #aef4ff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        th {
+            background: #176a91;
+            color: #ffffff;
+            padding: 16px;
+            text-align: left;
+            border-bottom: 2px solid #7ce7ff;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #8edffb40;
+        }
+
+        tbody tr {
+            transition: 0.3s;
+        }
+
+        tbody tr:hover {
+            background: #438bb65c;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .acoes form {
+            margin: 0;
+        }
+
+        .tabela-vazia {
+            text-align: center;
+            padding: 30px;
+            color: #c9f4ff;
+        }
+
+        .rodape {
+            text-align: center;
+            padding: 30px 10px 15px;
+            color: #e0faff;
+            line-height: 2;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 12px;
+            }
+
+            .tabela-container {
+                padding: 10px;
+            }
+
+            th, td {
+                padding: 12px 9px;
+                font-size: 13px;
+            }
+
+            .decoracao {
+                font-size: 25px;
+                letter-spacing: 3px;
+            }
+
+            .acoes {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="cabecalho">
-    <div class="container">
-        <h1>BiblioTec</h1>
-        <p>Sistema de gerenciamento de biblioteca</p>
-    </div>
-</header>
+<div class="bolhas" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
-<main class="container">
+<main class="conteudo">
 
-    <section class="titulo-pagina">
-        <div>
-            <h2>Categorias da biblioteca</h2>
-            <p>Gerencie as categorias cadastradas no sistema.</p>
+    <header>
+        <div class="decoracao">
+            <span class="agua-viva">🪼</span>
+            🐠 🪸
+            <span class="agua-viva">🪼</span>
+            🐚
+            <span class="agua-viva">🪼</span>
         </div>
 
-        <a class="botao botao-principal"
-           th:href="@{/categorias/nova}">
-            + Nova categoria
-        </a>
-    </section>
+        <h1>🌊 Categorias da Biblioteca 🌊</h1>
 
+        <p>
+            Explore o oceano de conhecimento do BiblioTec!
+        </p>
+    </header>
+
+    <!-- Mensagem de sucesso -->
     <p class="mensagem-sucesso"
        th:if="${mensagem}"
        th:text="${mensagem}">
         Operação realizada com sucesso!
     </p>
 
-    <section class="cartao">
+    <!-- Botão para cadastrar categoria -->
+    <div class="barra-acoes">
+        <a th:href="@{/categorias/nova}" class="botao botao-novo">
+            + 🐚 Cadastrar nova categoria
+        </a>
+    </div>
 
-        <div class="tabela-responsiva">
+    <section class="tabela-container">
 
-            <table>
-                <caption>Categorias cadastradas no BiblioTec</caption>
+        <table>
+            <caption>
+                🐬 Categorias cadastradas no BiblioTec 🐬
+            </caption>
 
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Descrição</th>
-                    <th scope="col">Ações</th>
-                </tr>
-                </thead>
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Ações</th>
+            </tr>
+            </thead>
 
-                <tbody>
+            <tbody>
 
-                <tr th:each="categoria : ${categorias}">
-                    <td th:text="${categoria.id}">1</td>
+            <tr th:each="categoria : ${categorias}">
 
-                    <td th:text="${categoria.nome}">
-                        Nome da categoria
-                    </td>
+                <td th:text="${categoria.id}">1</td>
 
-                    <td th:text="${categoria.descricao}">
-                        Descrição da categoria
-                    </td>
+                <td th:text="${categoria.nome}">
+                    Nome de exemplo
+                </td>
 
-                    <td class="acoes">
-                        <a class="botao botao-editar"
-                           th:href="@{/categorias/{id}/editar(id=${categoria.id})}">
-                            Editar
+                <td th:text="${categoria.descricao}">
+                    Descrição de exemplo
+                </td>
+
+                <td>
+                    <div class="acoes">
+
+                        <a th:href="@{/categorias/{id}/editar(id=${categoria.id})}"
+                           class="botao botao-editar">
+                            ✏️ Editar
                         </a>
 
                         <form th:action="@{/categorias/{id}/excluir(id=${categoria.id})}"
                               method="post"
-                              onsubmit="return confirm('Deseja realmente excluir esta categoria?');">
+                              onsubmit="return confirm('Tem certeza de que deseja excluir esta categoria?');">
 
-                            <button class="botao botao-excluir"
-                                    type="submit">
-                                Excluir
+                            <button type="submit"
+                                    class="botao botao-excluir">
+                                🗑️ Excluir
                             </button>
+
                         </form>
-                    </td>
-                </tr>
 
-                <tr th:if="${#lists.isEmpty(categorias)}">
-                    <td colspan="4" class="tabela-vazia">
-                        Nenhuma categoria cadastrada.
-                    </td>
-                </tr>
+                    </div>
+                </td>
 
-                </tbody>
-            </table>
+            </tr>
 
-        </div>
+            <tr th:if="${#lists.isEmpty(categorias)}">
+                <td colspan="4" class="tabela-vazia">
+                    🐚 Ainda não existem categorias cadastradas.
+                    Que tal adicionar a primeira?
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
 
     </section>
 
-</main>
+    <footer class="rodape">
+        <p>🪼 🐙 🐠 🪸 🐚 🪼</p>
+        <p>Feito com carinho nas profundezas do oceano 💙</p>
+        <p>BiblioTec — Um mar de conhecimento!</p>
+    </footer>
 
-<footer class="rodape">
-    <p>BiblioTec — Sistema de gerenciamento de biblioteca</p>
-</footer>
+</main>
 
 </body>
 </html>
