@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leitores | BiblioTec</title>
+    <link rel="stylesheet" th:href="@{/css/categorias.css}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 35px 20px;
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            color: white;
+            background: linear-gradient(145deg, #061638, #0b3766, #087e91, #54b9c4);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: auto;
+            padding: 35px;
+            border-radius: 20px;
+            background: rgba(3, 24, 55, 0.90);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .cabecalho {
+            text-align: center;
+            margin: 20px 0 30px;
+        }
+
+        .cabecalho h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .cabecalho p {
+            color: #c5eaf0;
+        }
+
+        .mensagem {
+            padding: 13px;
+            margin-bottom: 20px;
+            border-radius: 9px;
+            background: rgba(53,185,189,0.2);
+            border: 1px solid #54d6df;
+            color: #d9ffff;
+        }
+
+        .mensagem.erro {
+            background: rgba(190,48,83,0.22);
+            border-color: #ff8fa8;
+        }
+
+        .acoes {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .pesquisa {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pesquisa input {
+            padding: 11px 14px;
+            border: 1px solid #9cecff;
+            border-radius: 9px;
+            outline: none;
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 11px 17px;
+            border: none;
+            border-radius: 9px;
+            text-decoration: none;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .botao-principal {
+            background: #35b9bd;
+            color: #062d43;
+        }
+
+        .botao-principal:hover {
+            background: #65dce0;
+            transform: translateY(-2px);
+        }
+
+        .botao-editar {
+            background: #f0c75e;
+            color: #342500;
+        }
+
+        .botao-excluir {
+            background: #e76b7e;
+            color: #ffffff;
+        }
+
+        .tabela-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        th {
+            color: #9cecff;
+            background: rgba(255,255,255,0.08);
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .tipo {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: rgba(84,214,223,0.2);
+            border: 1px solid #54d6df;
+            color: #d9ffff;
+            font-size: 13px;
+        }
+
+        .acoes-linha {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .acoes-linha form {
+            margin: 0;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 35px;
+            color: #c5eaf0;
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .cabecalho h1 {
+                font-size: 24px;
+            }
+
+            .acoes {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .pesquisa input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="container">
+
+    <nav th:replace="~{fragments/layout :: menu('leitores')}"></nav>
+
+    <header class="cabecalho">
+        <h1>👥 Leitores da Biblioteca</h1>
+        <p>Gerencie os alunos e professores cadastrados no BiblioTec.</p>
+    </header>
+
+    <div class="mensagem"
+         th:if="${mensagem != null}"
+         th:text="${mensagem}">
+    </div>
+
+    <div class="mensagem erro"
+         th:if="${erro != null}"
+         th:text="${erro}">
+    </div>
+
+    <section class="acoes">
+
+        <form class="pesquisa" th:action="@{/leitores}" method="get">
+            <input type="text"
+                   name="nome"
+                   placeholder="Pesquisar por nome..."
+                   th:value="${nomePesquisa}">
+
+            <button type="submit" class="botao botao-principal">
+                🔎 Pesquisar
+            </button>
+
+            <a th:href="@{/leitores}" class="botao botao-principal">
+                Limpar
+            </a>
+        </form>
+
+        <a th:href="@{/leitores/novo}" class="botao botao-principal">
+            + Novo Leitor
+        </a>
+
+    </section>
+
+    <div class="tabela-container">
+
+        <table>
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Matrícula</th>
+                <th>E-mail</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="leitor : ${leitores}">
+                <td th:text="${leitor.nome}">Nome do leitor</td>
+                <td th:text="${leitor.matricula}">2026001</td>
+                <td th:text="${leitor.email != null ? leitor.email : '-'}">email</td>
+
+                <td>
+                        <span class="tipo"
+                              th:text="${leitor.tipo.rotulo}">
+                            Aluno
+                        </span>
+                </td>
+
+                <td>
+                    <div class="acoes-linha">
+
+                        <a th:href="@{/leitores/{id}/editar(id=${leitor.id})}"
+                           class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form th:action="@{/leitores/{id}/excluir(id=${leitor.id})}"
+                              method="post"
+                              onsubmit="return confirm('Deseja realmente excluir este leitor?')">
+
+                            <button type="submit" class="botao botao-excluir">
+                                Excluir
+                            </button>
+
+                        </form>
+
+                    </div>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(leitores)}">
+                <td colspan="5" class="vazio">
+                    Nenhum leitor cadastrado.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</main>
+
+</body>
+</html>

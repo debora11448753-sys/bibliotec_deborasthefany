@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${leitor.id == null ? 'Novo Leitor' : 'Editar Leitor'} + ' | BiblioTec'">
+        BiblioTec - Leitor
+    </title>
+
+    <link rel="stylesheet" th:href="@{/css/categorias.css}">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 35px 20px;
+            font-family: 'Trebuchet MS', Arial, sans-serif;
+            color: white;
+            background: linear-gradient(145deg, #061638, #0b3766, #087e91, #54b9c4);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 650px;
+            margin: 20px auto;
+            padding: 35px;
+            border-radius: 22px;
+            background: rgba(3, 24, 55, 0.90);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .cabecalho {
+            text-align: center;
+            margin: 25px 0 30px;
+        }
+
+        .icone {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .cabecalho h1 {
+            font-size: 29px;
+            margin-bottom: 10px;
+        }
+
+        .cabecalho p {
+            color: #c5eaf0;
+            font-size: 14px;
+        }
+
+        .grupo-campo {
+            margin-bottom: 22px;
+        }
+
+        .grupo-campo label {
+            display: block;
+            margin-bottom: 9px;
+            font-weight: bold;
+            color: #d9f7ff;
+        }
+
+        .grupo-campo input,
+        .grupo-campo select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 10px;
+            outline: none;
+            background: rgba(255,255,255,0.95);
+            color: #12334d;
+            font-family: inherit;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .grupo-campo input:focus,
+        .grupo-campo select:focus {
+            border-color: #54d6df;
+            box-shadow: 0 0 10px rgba(84,214,223,0.35);
+        }
+
+        .ajuda {
+            display: block;
+            margin-top: 8px;
+            color: #b9dce8;
+            font-size: 12px;
+        }
+
+        .erro {
+            display: block;
+            margin-top: 10px;
+            padding: 11px 14px;
+            color: #ffe1e8;
+            background: rgba(190,48,83,0.22);
+            border: 1px solid rgba(255,143,168,0.65);
+            border-left: 4px solid #ff8fa8;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .erro::before {
+            content: "⚠ ";
+            color: #ff9db2;
+        }
+
+        .campo-erro {
+            border-color: #ff8fa8 !important;
+            background: #fff0f3 !important;
+        }
+
+        .botoes {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .botao {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .botao-salvar {
+            background: #35b9bd;
+            color: #062d43;
+        }
+
+        .botao-salvar:hover {
+            background: #65dce0;
+            transform: translateY(-2px);
+        }
+
+        .botao-voltar {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .botao-voltar:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            .botoes {
+                flex-direction: column;
+            }
+
+            .cabecalho h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="container">
+
+    <nav th:replace="~{fragments/layout :: menu('leitores')}"></nav>
+
+    <header class="cabecalho">
+        <div class="icone">👥</div>
+
+        <h1 th:text="${leitor.id == null ? 'Novo Leitor' : 'Editar Leitor'}">
+            Novo Leitor
+        </h1>
+
+        <p>Preencha os dados para cadastrar um leitor na biblioteca.</p>
+    </header>
+
+    <form th:action="@{/leitores}"
+          th:object="${leitor}"
+          method="post">
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="grupo-campo">
+            <label for="nome">Nome completo</label>
+
+            <input type="text"
+                   id="nome"
+                   th:field="*{nome}"
+                   th:errorclass="campo-erro"
+                   placeholder="Digite o nome completo">
+
+            <p class="erro"
+               th:if="${#fields.hasErrors('nome')}"
+               th:errors="*{nome}">
+                Erro no nome
+            </p>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="matricula">Matrícula</label>
+
+            <input type="text"
+                   id="matricula"
+                   th:field="*{matricula}"
+                   th:errorclass="campo-erro"
+                   placeholder="Ex.: 2026001">
+
+            <small class="ajuda">
+                A matrícula deve ser única para cada leitor.
+            </small>
+
+            <p class="erro"
+               th:if="${#fields.hasErrors('matricula')}"
+               th:errors="*{matricula}">
+                Erro na matrícula
+            </p>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="email">E-mail</label>
+
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   th:errorclass="campo-erro"
+                   placeholder="exemplo@email.com">
+
+            <small class="ajuda">
+                O preenchimento do e-mail é opcional.
+            </small>
+
+            <p class="erro"
+               th:if="${#fields.hasErrors('email')}"
+               th:errors="*{email}">
+                Erro no e-mail
+            </p>
+        </div>
+
+        <div class="grupo-campo">
+            <label for="tipo">Tipo de leitor</label>
+
+            <select id="tipo"
+                    th:field="*{tipo}"
+                    th:errorclass="campo-erro">
+
+                <option value="">Selecione o tipo de leitor</option>
+
+                <option th:each="tipo : ${tipos}"
+                        th:value="${tipo}"
+                        th:text="${tipo.rotulo}">
+                    Aluno
+                </option>
+
+            </select>
+
+            <p class="erro"
+               th:if="${#fields.hasErrors('tipo')}"
+               th:errors="*{tipo}">
+                Erro no tipo
+            </p>
+        </div>
+
+        <div class="botoes">
+
+            <button type="submit" class="botao botao-salvar">
+                💾 Salvar leitor
+            </button>
+
+            <a th:href="@{/leitores}" class="botao botao-voltar">
+                ← Voltar
+            </a>
+
+        </div>
+
+    </form>
+
+</main>
+
+</body>
+</html>
